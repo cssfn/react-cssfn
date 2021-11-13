@@ -75,7 +75,7 @@ export const usesAwesomeButton = () => composition([
 ]);
 
 // attach the css to DOM:
-export const useAwesomeButton = createUseSheet(() => [
+export const useAwesomeButtonSheet = createUseSheet(() => [
     mainComposition([
         imports([
             usesAwesomeButton(),
@@ -93,7 +93,7 @@ Then we can consume our generated css like this:
 
 ```jsx
 export default function AwesomeButton(props) {
-    const btnSheet = useAwesomeButton();
+    const btnSheet = useAwesomeButtonSheet();
     
     return (
         <>
