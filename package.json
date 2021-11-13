@@ -1,0 +1,37 @@
+{
+  "name": "@cssfn/react-cssfn",
+  "version": "1.0.0",
+  "description": "Writes CSS in react hooks.",
+  "main": "dist/react-cssfn.js",
+  "types": "dist/react-cssfn.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cssfn/react-cssfn.git"
+  },
+  "keywords": [
+    "css",
+    "stylesheet",
+    "javascript",
+    "function",
+    "react",
+    "hooks",
+    "mixin",
+    "typescript"
+  ],
+  "author": "heymarco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cssfn/react-cssfn/issues"
+  },
+  "homepage": "https://github.com/cssfn/react-cssfn#readme",
+  "dependencies": {
+    "@cssfn/cssfn": "^1.0.2",
+    "@cssfn/types": "^1.0.2",
+    "@types/react": "^17.0.34",
+    "jss": "^10.8.2",
+    "react": "^17.0.2"
+  }
+}
