@@ -1,7 +1,8 @@
 {
   "name": "@cssfn/react-cssfn",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Writes CSS in react hooks.",
+  "type": "module",
   "main": "dist/react-cssfn.jsx",
   "types": "dist/react-cssfn.d.ts",
   "scripts": {
@@ -28,9 +29,9 @@
   },
   "homepage": "https://github.com/cssfn/react-cssfn#readme",
   "dependencies": {
-    "@cssfn/cssfn": "^1.0.2",
-    "@cssfn/types": "^1.0.2",
-    "@types/react": "^17.0.34",
+    "@cssfn/cssfn": "^1.0.3",
+    "@cssfn/types": "^1.0.3",
+    "@types/react": "^17.0.35",
     "jss": "^10.8.2",
     "react": "^17.0.2"
   }
