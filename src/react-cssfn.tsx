@@ -1,5 +1,6 @@
 // react:
 import {
+    useEffect,
     useLayoutEffect,
 }                           from 'react'         // base technology of our cssfn components
 
@@ -31,9 +32,16 @@ import {
     usesCssfn,
 }                           from '@cssfn/cssfn'       // cssfn core
 
+// others libs:
+import {
+    isBrowser,
+}                           from 'is-in-browser'
+
 
 
 // hooks:
+
+const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
 
 const styleSheetManager = new SheetsManager(); // caches & manages styleSheets usage, attached to dom when in use and detached from dom when not in use
 export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styles: ProductOrFactory<Styles<TClassName>>): Factory<Classes<TClassName>> => {
@@ -65,7 +73,7 @@ export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styl
         
         
         
-        useLayoutEffect(() => {
+        useIsomorphicLayoutEffect(() => {
             // notify `styleSheetManager` that the `styleSheet` is being used
             // the `styleSheetManager` will attach the `styleSheet` to dom if one/more `styleSheet` users exist.
             styleSheetManager.manage(styleSheetId);
