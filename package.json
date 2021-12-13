@@ -1,6 +1,6 @@
 {
   "name": "@cssfn/react-cssfn",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Writes CSS in react hooks.",
   "type": "module",
   "main": "dist/react-cssfn.js",

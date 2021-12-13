@@ -1,5 +1,5 @@
 // react:
-import { useEffect, useLayoutEffect, } from 'react'; // base technology of our cssfn components
+import { useLayoutEffect, } from 'react'; // base technology of our cssfn components
 // jss:
 import { SheetsManager, } from 'jss'; // base technology of our cssfn components
 import { 
@@ -10,7 +10,7 @@ usesCssfn, } from '@cssfn/cssfn'; // cssfn core
 // others libs:
 import { isBrowser, } from 'is-in-browser';
 // hooks:
-const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : (effect, deps) => { effect(); };
 const styleSheetManager = new SheetsManager(); // caches & manages styleSheets usage, attached to dom when in use and detached from dom when not in use
 export const createUseJssSheet = (styles) => {
     const styleSheetId = {}; // a simple object for the styleSheet's identifier (by reference)

@@ -41,7 +41,7 @@ import {
 
 // hooks:
 
-const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : (effect: React.EffectCallback, deps?: React.DependencyList): void => { effect(); };
 
 const styleSheetManager = new SheetsManager(); // caches & manages styleSheets usage, attached to dom when in use and detached from dom when not in use
 export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styles: ProductOrFactory<Styles<TClassName>>): Factory<Classes<TClassName>> => {
