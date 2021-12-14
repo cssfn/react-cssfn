@@ -41,39 +41,24 @@ import {
 
 // hooks:
 
-const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : (effect: React.EffectCallback, deps?: React.DependencyList): void => { effect(); };
+const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
 
 const styleSheetManager = new SheetsManager(); // caches & manages styleSheets usage, attached to dom when in use and detached from dom when not in use
 export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styles: ProductOrFactory<Styles<TClassName>>): Factory<Classes<TClassName>> => {
     const styleSheetId  = {}; // a simple object for the styleSheet's identifier (by reference)
-
+    
+    // create a new styleSheet using our pre-configured `customJss`:
+    const styleSheet = createJssSheet(styles);
+    
+    // register to `styleSheetManager` to be cached and also to be able to attach/detach to/from dom:
+    styleSheetManager.add(styleSheetId, styleSheet);
+    
     
     
     return (): Classes<TClassName> => {
-        const styleSheet = ( // no need to use `useMemo` because fetching from `styleSheetManager` is inexpensive
-            // take from an existing cached styleSheet (if any):
-            styleSheetManager.get(styleSheetId) // inexpensive operation
-            ??
-            // or create a new one:
-            (() => { // expensive operation
-                // create a new styleSheet using our pre-configured `customJss`:
-                const newStyleSheet = createJssSheet(styles);
-                
-                
-                
-                // register to `styleSheetManager` to be cached and also to be able to attach/detach to/from dom:
-                styleSheetManager.add(styleSheetId, newStyleSheet);
-
-                
-                
-                // here the ready to use styleSheet:
-                return newStyleSheet;
-            })()
-        );
-        
-        
-        
         useIsomorphicLayoutEffect(() => {
+            // setups:
+            
             // notify `styleSheetManager` that the `styleSheet` is being used
             // the `styleSheetManager` will attach the `styleSheet` to dom if one/more `styleSheet` users exist.
             styleSheetManager.manage(styleSheetId);
