@@ -43,40 +43,57 @@ import {
 
 const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
 
-const styleSheetManager = new SheetsManager(); // caches & manages styleSheets usage, attached to dom when in use and detached from dom when not in use
+const sheetManager = new SheetsManager(); // caches & manages sheets usage, attached to dom when in use and detached from dom when not in use
+let sheetCounter = 0;
 export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styles: ProductOrFactory<Styles<TClassName>>): Factory<Classes<TClassName>> => {
-    const styleSheetId  = {}; // a simple object for the styleSheet's identifier (by reference)
-    
-    // create a new styleSheet using our pre-configured `customJss`:
-    const styleSheet = createJssSheet(styles);
-    
-    // register to `styleSheetManager` to be cached and also to be able to attach/detach to/from dom:
-    styleSheetManager.add(styleSheetId, styleSheet);
+    const sheetIdObj = {}; // a simple object for the sheet's identifier (by reference)
+    const sheetId    = (++sheetCounter);
     
     
     
     return (): Classes<TClassName> => {
+        const sheet = ( // no need to use `useMemo` because fetching from `sheetManager` is inexpensive
+            // take from an existing cached sheet (if any):
+            sheetManager.get(sheetIdObj) // inexpensive operation
+            ??
+            // or create a new one:
+            (() => { // expensive operation
+                // create a new sheet using our pre-configured `customJss`:
+                const newSheet = createJssSheet(styles, sheetId.toString(36));
+                
+                
+                
+                // register to `sheetManager` to be cached and also to be able to attach/detach to/from dom:
+                sheetManager.add(sheetIdObj, newSheet);
+
+                
+                
+                // here the ready to use sheet:
+                return newSheet;
+            })()
+        );
+        
+        
+        
         useIsomorphicLayoutEffect(() => {
-            // setups:
-            
-            // notify `styleSheetManager` that the `styleSheet` is being used
-            // the `styleSheetManager` will attach the `styleSheet` to dom if one/more `styleSheet` users exist.
-            styleSheetManager.manage(styleSheetId);
+            // notify `sheetManager` that the `sheet` is being used
+            // the `sheetManager` will attach the `sheet` to dom if one/more `sheet` users exist.
+            sheetManager.manage(sheetIdObj);
             
             
             
             // cleanups:
             return () => {
-                // notify `styleSheetManager` that the `styleSheet` is no longer being used
-                // the `styleSheetManager` will detach the `styleSheet` from dom if no `styleSheet` user exists.
-                styleSheetManager.unmanage(styleSheetId);
+                // notify `sheetManager` that the `sheet` is no longer being used
+                // the `sheetManager` will detach the `sheet` from dom if no `sheet` user exists.
+                sheetManager.unmanage(sheetIdObj);
             };
         }, []);
 
 
 
-        // here the ready to use `styleSheet`'s classes:
-        return styleSheet.classes;
+        // here the ready to use `sheet`'s classes:
+        return sheet.classes;
     };
 }
 export const createUseSheet    = <TClassName extends ClassName = ClassName>(classes: ProductOrFactory<ClassList<TClassName>>): Factory<Classes<TClassName>> => {
