@@ -12,10 +12,8 @@ import { isBrowser, } from 'is-in-browser';
 // hooks:
 const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
 const sheetManager = new SheetsManager(); // caches & manages sheets usage, attached to dom when in use and detached from dom when not in use
-let sheetCounter = 0;
-export const createUseJssSheet = (styles) => {
+export const createUseJssSheet = (styles, sheetId) => {
     const sheetIdObj = {}; // a simple object for the sheet's identifier (by reference)
-    const sheetId = (++sheetCounter);
     return () => {
         const sheet = ( // no need to use `useMemo` because fetching from `sheetManager` is inexpensive
         // take from an existing cached sheet (if any):
@@ -24,7 +22,7 @@ export const createUseJssSheet = (styles) => {
                 // or create a new one:
                 (() => {
                     // create a new sheet using our pre-configured `customJss`:
-                    const newSheet = createJssSheet(styles, sheetId.toString(36));
+                    const newSheet = createJssSheet(styles, sheetId);
                     // register to `sheetManager` to be cached and also to be able to attach/detach to/from dom:
                     sheetManager.add(sheetIdObj, newSheet);
                     // here the ready to use sheet:
@@ -45,6 +43,6 @@ export const createUseJssSheet = (styles) => {
         return sheet.classes;
     };
 };
-export const createUseSheet = (classes) => {
-    return createUseJssSheet(() => usesCssfn(classes));
+export const createUseSheet = (classes, sheetId) => {
+    return createUseJssSheet(() => usesCssfn(classes), sheetId);
 };

@@ -44,10 +44,8 @@ import {
 const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect;
 
 const sheetManager = new SheetsManager(); // caches & manages sheets usage, attached to dom when in use and detached from dom when not in use
-let sheetCounter = 0;
-export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styles: ProductOrFactory<Styles<TClassName>>): Factory<Classes<TClassName>> => {
+export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styles: ProductOrFactory<Styles<TClassName>>, sheetId?: string): Factory<Classes<TClassName>> => {
     const sheetIdObj = {}; // a simple object for the sheet's identifier (by reference)
-    const sheetId    = (++sheetCounter);
     
     
     
@@ -59,7 +57,7 @@ export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styl
             // or create a new one:
             (() => { // expensive operation
                 // create a new sheet using our pre-configured `customJss`:
-                const newSheet = createJssSheet(styles, sheetId.toString(36));
+                const newSheet = createJssSheet(styles, sheetId);
                 
                 
                 
@@ -96,8 +94,9 @@ export const createUseJssSheet = <TClassName extends ClassName = ClassName>(styl
         return sheet.classes;
     };
 }
-export const createUseSheet    = <TClassName extends ClassName = ClassName>(classes: ProductOrFactory<ClassList<TClassName>>): Factory<Classes<TClassName>> => {
+export const createUseSheet    = <TClassName extends ClassName = ClassName>(classes: ProductOrFactory<ClassList<TClassName>>, sheetId?: string): Factory<Classes<TClassName>> => {
     return createUseJssSheet(
-        () => usesCssfn(classes)
+        () => usesCssfn(classes),
+        sheetId
     );
 }
